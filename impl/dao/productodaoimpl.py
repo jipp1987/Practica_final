@@ -13,16 +13,14 @@ class ProductoDAOImpl(BaseDao):
         self.table: str = 'producto'
         self.model_class: type = Producto
 
-    def insert(self, nombre: str, descripcion: str) -> None:
-        """Función para insertar un producto."""
+    def insert(self, nombre: str, descripcion: str) -> int:
+        """
+        Función para insertar un producto.
+        :param nombre:
+        :param descripcion:
+        :return: Devuelve el id del producto recién creado.
+        """
         sql = (f"INSERT INTO {self.table} (nombre, descripcion) VALUES ('{nombre}', "
                f"'{descripcion}')")
-
-        # Conectar con la base de datos
-        self.connect()
-        # Crear cursor, SQL y hacer commit
-        cursor = self.create_cursor()
-        cursor.execute(sql)
-        self.commit()
-        # Desconectar de la BD
-        self.disconnect()
+        return super()._execute_statement(sql_statement=sql,
+                                          callback_function=self._get_last_rowid)
